@@ -1,44 +1,576 @@
-<!--Archivo de html para probar configuraciones sencillar del proyecto-->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello world</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Club Escolar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <link rel="stylesheet" href="assets/css/styles.css">
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
-            text-align: center;
-        }
-        .card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            max-width: 90%;
-        }
-        h1 { color: #007bff; }
-        .status { color: green; font-weight: bold; }
-    </style>
+    :root {
+      --bg:        #080c10;
+      --bg2:       #0d1117;
+      --surface:   #111820;
+      --border:    #1e2a35;
+      --accent:    #00d4ff;
+      --accent2:   #7b4fff;
+      --text:      #e8edf2;
+      --muted:     #64748b;
+      --gold:      #f5c542;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(8,12,16,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: padding .3s;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.25rem;
+      color: var(--accent);
+      letter-spacing: .04em;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-size: .875rem; font-weight: 500; letter-spacing: .05em;
+      transition: color .25s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      padding: .45rem 1.1rem;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--accent) !important;
+    }
+    .nav-cta:hover { background: var(--accent); color: var(--bg) !important; }
+
+    /* hamburger */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; flex-direction: column; gap: 0;
+      position: fixed; top: 61px; left: 0; width: 100%; z-index: 99;
+      background: rgba(8,12,16,.97); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      max-height: 0; overflow: hidden; transition: max-height .4s ease;
+    }
+    .mobile-menu.open { max-height: 400px; }
+    .mobile-menu a {
+      display: block; padding: 1rem 2rem;
+      color: var(--muted); text-decoration: none;
+      font-size: 1rem; border-bottom: 1px solid var(--border);
+      transition: color .2s, background .2s;
+    }
+    .mobile-menu a:hover { color: var(--accent); background: rgba(0,212,255,.04); }
+
+    /* ─── HERO ─── */
+    #inicio {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 6rem 2rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+    }
+    .hero-glow {
+      position: absolute; width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(123,79,255,.18) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      animation: pulse 6s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)} }
+    .hero-badge {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .35rem 1rem; border-radius: 100px;
+      border: 1px solid rgba(0,212,255,.3);
+      background: rgba(0,212,255,.06);
+      font-size: .75rem; letter-spacing: .1em; color: var(--accent);
+      margin-bottom: 1.5rem;
+      animation: fadeUp .8s ease both;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    h1 {
+      position: relative; z-index: 1;
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -.02em;
+      animation: fadeUp .8s .15s ease both;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      position: relative; z-index: 1;
+      margin-top: 1.5rem; max-width: 520px;
+      color: var(--muted); font-size: 1.1rem; line-height: 1.7;
+      animation: fadeUp .8s .3s ease both;
+    }
+    .hero-btns {
+      position: relative; z-index: 1;
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      margin-top: 2.5rem;
+      animation: fadeUp .8s .45s ease both;
+    }
+    .btn-primary {
+      padding: .75rem 2rem; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; font-weight: 600; font-size: .95rem;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: opacity .2s, transform .2s;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-2px); }
+    .btn-ghost {
+      padding: .75rem 2rem; border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--text); font-weight: 500; font-size: .95rem;
+      text-decoration: none; background: transparent;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); background: rgba(0,212,255,.05); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      font-size: .7rem; letter-spacing: .15em; font-weight: 600;
+      color: var(--accent); text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; line-height: 1.1; letter-spacing: -.01em;
+      margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 560px; }
+
+    /* ─── ABOUT ─── */
+    #nosotros { background: var(--bg2); }
+    .vmv-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .vmv-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      position: relative; overflow: hidden;
+      transition: transform .3s, border-color .3s;
+    }
+    .vmv-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0; transition: opacity .3s;
+    }
+    .vmv-card:hover { transform: translateY(-4px); border-color: rgba(0,212,255,.35); }
+    .vmv-card:hover::before { opacity: 1; }
+    .vmv-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1.25rem;
+    }
+    .vmv-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem;
+    }
+    .vmv-card p { color: var(--muted); font-size: .9rem; line-height: 1.65; }
+
+    .values-grid {
+      display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2.5rem;
+    }
+    .value-chip {
+      padding: .5rem 1.1rem; border-radius: 100px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: .85rem; color: var(--text);
+      transition: all .25s; cursor: default;
+    }
+    .value-chip:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,.06); }
+
+    /* ─── TEAM ─── */
+    #equipo { }
+    .team-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .team-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem 1.5rem;
+      text-align: center;
+      transition: transform .3s, border-color .3s;
+    }
+    .team-card:hover { transform: translateY(-4px); border-color: rgba(123,79,255,.4); }
+    .avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 800; font-family: 'Syne', sans-serif;
+      color: #fff;
+    }
+    .team-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: .25rem; }
+    .team-role { font-size: .8rem; color: var(--accent); font-weight: 500; letter-spacing: .04em; }
+
+    /* ─── ACTIVITIES ─── */
+    #actividades { background: var(--bg2); }
+    .act-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .act-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      transition: transform .3s, border-color .3s;
+      position: relative; overflow: hidden;
+    }
+    .act-card:hover { transform: translateY(-4px); border-color: rgba(0,212,255,.3); }
+    .act-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem; font-weight: 800;
+      color: rgba(0,212,255,.08);
+      position: absolute; top: 1rem; right: 1.5rem;
+      line-height: 1;
+    }
+    .act-icon { font-size: 1.75rem; margin-bottom: 1rem; }
+    .act-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+    .act-card p { color: var(--muted); font-size: .875rem; line-height: 1.65; }
+
+    /* ─── CONTACT ─── */
+    #contacto { }
+    .contact-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: start; margin-top: 3rem;
+    }
+    .contact-info h3 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; }
+    .contact-info p { color: var(--muted); line-height: 1.7; margin-bottom: 2rem; }
+    .contact-item {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: 1rem;
+    }
+    .contact-item .ci-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: rgba(0,212,255,.08);
+      border: 1px solid rgba(0,212,255,.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .contact-item span { color: var(--muted); font-size: .9rem; }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-group label { font-size: .8rem; letter-spacing: .06em; color: var(--muted); font-weight: 500; }
+    .form-group input, .form-group textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: .85rem 1rem;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: .95rem; resize: vertical;
+      transition: border-color .25s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: var(--muted); }
+    .form-submit {
+      padding: .85rem 2rem; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; font-family: 'DM Sans', sans-serif;
+      font-weight: 600; font-size: .95rem; border: none; cursor: pointer;
+      transition: opacity .2s, transform .2s;
+    }
+    .form-submit:hover { opacity: .88; transform: translateY(-2px); }
+    .form-success {
+      display: none; padding: 1rem; border-radius: 10px;
+      background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.25);
+      color: var(--accent); font-size: .9rem; text-align: center;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem; text-align: center;
+      color: var(--muted); font-size: .875rem;
+    }
+    footer span { color: var(--accent); }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      width: 48px; height: 3px; border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      margin: 1.25rem 0;
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      .contact-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+      section { padding: 4rem 1.25rem; }
+      h2 { font-size: 2rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Club Hello world esta funcionando</h1>
-        <p>El servidor local funciona.</p>
-        <p class="status">Estatus: Conexión establecida</p>
-        <hr>
-    </div>
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">◈ ClubEscolar</div>
+  <ul class="nav-links">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#equipo">Equipo</a></li>
+    <li><a href="#actividades">Actividades</a></li>
+    <li><a href="#contacto" class="nav-cta">Únete</a></li>
+  </ul>
+  <button class="hamburger" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#inicio" class="mob-link">Inicio</a>
+  <a href="#nosotros" class="mob-link">Nosotros</a>
+  <a href="#equipo" class="mob-link">Equipo</a>
+  <a href="#actividades" class="mob-link">Actividades</a>
+  <a href="#contacto" class="mob-link">Únete al Club</a>
+</div>
 
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-badge"><span class="badge-dot"></span> Año escolar 2024–2025</div>
+  <h1>Somos el Club<br><span>que Inspira</span></h1>
+  <p class="hero-sub">Un espacio donde las ideas crecen, los líderes emergen y el aprendizaje va más allá del aula.</p>
+  <div class="hero-btns">
+    <a href="#nosotros" class="btn-primary">Conoce más →</a>
+    <a href="#contacto" class="btn-ghost">Únete ahora</a>
+  </div>
+</section>
+
+<!-- NOSOTROS / VISIÓN MISIÓN VALORES -->
+<section id="nosotros">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">Sobre nosotros</span>
+      <h2>Quiénes somos</h2>
+      <div class="divider"></div>
+      <p class="section-sub">Somos un club comprometido con el desarrollo integral de sus miembros, fomentando liderazgo, creatividad y trabajo en equipo.</p>
+    </div>
+    <div class="vmv-grid">
+      <div class="vmv-card reveal">
+        <div class="vmv-icon" style="background:rgba(0,212,255,.1)">🔭</div>
+        <h3>Visión</h3>
+        <p>Ser el club estudiantil más influyente de la escuela, formando líderes que generen un impacto positivo en su comunidad y entorno.</p>
+      </div>
+      <div class="vmv-card reveal">
+        <div class="vmv-icon" style="background:rgba(123,79,255,.1)">🎯</div>
+        <h3>Misión</h3>
+        <p>Impulsar el crecimiento personal y colectivo de nuestros miembros a través de actividades, proyectos y espacios de aprendizaje colaborativo.</p>
+      </div>
+      <div class="vmv-card reveal">
+        <div class="vmv-icon" style="background:rgba(245,197,66,.1)">⚡</div>
+        <h3>Valores</h3>
+        <p>Nuestros pilares guían cada acción que tomamos como equipo y definen nuestra identidad como club.</p>
+        <div class="values-grid" style="margin-top:1rem">
+          <span class="value-chip">Respeto</span>
+          <span class="value-chip">Liderazgo</span>
+          <span class="value-chip">Creatividad</span>
+          <span class="value-chip">Compromiso</span>
+          <span class="value-chip">Colaboración</span>
+          <span class="value-chip">Integridad</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPO -->
+<section id="equipo">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">Nuestro equipo</span>
+      <h2>Líderes del club</h2>
+      <div class="divider"></div>
+      <p class="section-sub">Personas apasionadas que dedican su tiempo y energía para que el club crezca cada día.</p>
+    </div>
+    <div class="team-grid" id="teamGrid">
+      <!-- Generado por JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVIDADES -->
+<section id="actividades">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">Lo que hacemos</span>
+      <h2>Actividades y objetivos</h2>
+      <div class="divider"></div>
+      <p class="section-sub">Proyectos, eventos y metas que nos mueven y nos definen como club.</p>
+    </div>
+    <div class="act-grid" id="actGrid">
+      <!-- Generado por JS -->
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">Únete</span>
+      <h2>Contáctanos</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="contact-wrap">
+      <div class="contact-info reveal">
+        <h3>¿Quieres ser parte del club?</h3>
+        <p>Escríbenos y con gusto te damos más información sobre cómo unirte, nuestras próximas actividades y cómo puedes contribuir.</p>
+        <div class="contact-item">
+          <div class="ci-icon">📍</div>
+          <span>Salón B-204, Edificio Principal</span>
+        </div>
+        <div class="contact-item">
+          <div class="ci-icon">📅</div>
+          <span>Reuniones: Martes y Jueves 13:00–14:00 hrs</span>
+        </div>
+        <div class="contact-item">
+          <div class="ci-icon">✉️</div>
+          <span>club@escuela.edu.mx</span>
+        </div>
+      </div>
+      <div class="contact-form reveal" id="contactForm">
+        <div class="form-group">
+          <label>NOMBRE COMPLETO</label>
+          <input type="text" placeholder="Tu nombre"/>
+        </div>
+        <div class="form-group">
+          <label>CORREO ELECTRÓNICO</label>
+          <input type="email" placeholder="tu@correo.com"/>
+        </div>
+        <div class="form-group">
+          <label>GRADO Y GRUPO</label>
+          <input type="text" placeholder="Ej. 3°B"/>
+        </div>
+        <div class="form-group">
+          <label>MENSAJE</label>
+          <textarea rows="4" placeholder="¿Por qué quieres unirte al club?"></textarea>
+        </div>
+        <button class="form-submit" id="submitBtn">Enviar mensaje →</button>
+        <div class="form-success" id="formSuccess">✓ ¡Mensaje enviado! Te contactaremos pronto.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 <span>Club Escolar</span> — Hecho con 💙 por el equipo</p>
+</footer>
+
+<script>
+  /* ── DATA ── */
+  const team = [
+    { name: "Ana García",      role: "Presidenta",         color: "#00d4ff" },
+    { name: "Luis Martínez",   role: "Vicepresidente",     color: "#7b4fff" },
+    { name: "Sofia Reyes",     role: "Secretaria",         color: "#f5c542" },
+    { name: "Carlos López",    role: "Tesorero",           color: "#ff6b6b" },
+    { name: "Mía Torres",      role: "Relaciones Públicas",color: "#00d4ff" },
+    { name: "Diego Ruiz",      role: "Vocal",              color: "#7b4fff" },
+  ];
+  const activities = [
+    { icon:"💡", title:"Charlas y Talleres", desc:"Organizamos sesiones semanales con temas de liderazgo, innovación y habilidades para la vida." },
+    { icon:"🤝", title:"Voluntariado Comunitario", desc:"Participamos activamente en proyectos sociales que benefician a nuestra comunidad escolar y local." },
+    { icon:"🏆", title:"Competencias Académicas", desc:"Preparamos y representamos a la escuela en olimpiadas, concursos y ferias de ciencias." },
+    { icon:"🎨", title:"Proyectos Creativos", desc:"Fomentamos el arte, la música y la expresión cultural como medios de desarrollo personal." },
+    { icon:"🌱", title:"Sustentabilidad", desc:"Impulsar iniciativas ecológicas dentro del plantel: reciclaje, huertos y conciencia ambiental." },
+    { icon:"📣", title:"Eventos Escolares", desc:"Coordinamos festivales, kermeses y celebraciones que fortalecen el sentido de comunidad." },
+  ];
+
+  /* ── RENDER TEAM ── */
+  const teamGrid = document.getElementById('teamGrid');
+  team.forEach(m => {
+    const initials = m.name.split(' ').map(w => w[0]).join('').slice(0,2);
+    teamGrid.innerHTML += `
+      <div class="team-card reveal">
+        <div class="avatar" style="background:linear-gradient(135deg,${m.color}33,${m.color}66);color:${m.color}">${initials}</div>
+        <h3>${m.name}</h3>
+        <p class="team-role">${m.role}</p>
+      </div>`;
+  });
+
+  /* ── RENDER ACTIVITIES ── */
+  const actGrid = document.getElementById('actGrid');
+  activities.forEach((a,i) => {
+    actGrid.innerHTML += `
+      <div class="act-card reveal">
+        <div class="act-number">${String(i+1).padStart(2,'0')}</div>
+        <div class="act-icon">${a.icon}</div>
+        <h3>${a.title}</h3>
+        <p>${a.desc}</p>
+      </div>`;
+  });
+
+  /* ── HAMBURGER ── */
+  const ham = document.getElementById('ham');
+  const mob = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    mob.classList.toggle('open');
+  });
+  document.querySelectorAll('.mob-link').forEach(l => l.addEventListener('click', () => {
+    ham.classList.remove('open'); mob.classList.remove('open');
+  }));
+
+  /* ── SCROLL REVEAL ── */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  /* ── FORM ── */
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  });
+</script>
 </body>
 </html>
