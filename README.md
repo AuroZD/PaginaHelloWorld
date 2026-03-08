@@ -8,7 +8,7 @@ Alvarez Cortes Aureliano
 Garcia Perez Emmanuel Abelardo
 Villanueva GomeZ Patricia
 
-○ Tecnologías utilizadas:
+○ Tecnologías utilizadas: html, css
 
 ○ Instrucciones básicas de ejecución:
 
