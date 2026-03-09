@@ -43,6 +43,7 @@ PHP 7.4 o superior
 Navegador web
 
 Instalación Local
+
 1 Clonar el repositorio
 git clone https://github.com/AuroZD/PaginaHelloWorld.git
 
