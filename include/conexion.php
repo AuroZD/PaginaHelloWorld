@@ -25,9 +25,7 @@ if (!$conexion) {
     die("Error de conexión: " . mysqli_connect_error());
 }
 
-// Configurar el juego de caracteres a UTF-8 para que se vean bien los acentos
+// Configurar el juego de caracteres a UTF-8 para que se visualizar los acentos
 mysqli_set_charset($conexion, "utf8");
 
-// Si llegamos aquí, la conexión es exitosa
-// echo "Conexión establecida con éxito"; // Descomenta para probar
 ?>
