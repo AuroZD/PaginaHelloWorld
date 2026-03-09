@@ -117,7 +117,7 @@
           <span>helloworld.clubfesa@gmail.com</span>
         </div>
       </div>
-      <form action="include/enviar.php" method="POST" class="contact-form">
+      <form action="include/enviar.php" method="POST" class="contact-form reveal" id="contactForm">
         <div class="form-group">
           <label>NOMBRE COMPLETO</label>
           <input type="text" name="nombre" placeholder="Tu nombre" required/>
@@ -132,9 +132,10 @@
         </div>
         <div class="form-group">
           <label>MENSAJE</label>
-          <textarea name="mensaje" rows="4" placeholder="¿Por qué quieres unirte?" required></textarea>
+          <textarea name="mensaje" rows="4" placeholder="¿Por qué quieres unirte al club?" required></textarea>
         </div>
-        <button type="submit" class="form-submit">Enviar mensaje →</button>
+        <button type="submit" class="form-submit" id="submitBtn">Enviar mensaje →</button>
+        <div class="form-success" id="formSuccess">✓ ¡Mensaje enviado! Te contactaremos pronto.</div>
       </form>
     </div>
   </div>
