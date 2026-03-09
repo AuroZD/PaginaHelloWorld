@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hello World</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/hack.ico">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
@@ -117,7 +118,7 @@
           <span>helloworld.clubfesa@gmail.com</span>
         </div>
       </div>
-      <form action="include/enviar.php" method="POST" class="contact-form reveal" id="contactForm">
+      <form action="https://formspree.io/f/xnjgjwrq" method="POST" class="contact-form reveal" id="contactForm">
         <div class="form-group">
           <label>NOMBRE COMPLETO</label>
           <input type="text" name="nombre" placeholder="Tu nombre" required/>
@@ -132,10 +133,9 @@
         </div>
         <div class="form-group">
           <label>MENSAJE</label>
-          <textarea name="mensaje" rows="4" placeholder="¿Por qué quieres unirte al club?" required></textarea>
+          <textarea name="mensaje" rows="4" placeholder="¿Por qué quieres unirte?" required></textarea>
         </div>
-        <button type="submit" class="form-submit" id="submitBtn">Enviar mensaje →</button>
-        <div class="form-success" id="formSuccess">✓ ¡Mensaje enviado! Te contactaremos pronto.</div>
+        <button type="submit" class="form-submit">Enviar mensaje →</button>
       </form>
     </div>
   </div>
